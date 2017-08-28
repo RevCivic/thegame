@@ -1,0 +1,113 @@
+
+TODO:
+
+Put a cap on spawn rate
+BUG:
+  attack power of units is universal, instead of when it gets created
+  solution:
+    use a variable to make an instance of the unit
+    average that variable together based on unitcount when they merge
+
+
+IMPROVEMENT:
+Color code the difficulty of the next level based on # units spawning * total unit growth
+  
+HELPFUL:
+Tooltips:
+  Spells - Get 10 max mana on level up, more mana gain, and cheaper spells.
+  Fireball - Deals 5 damage per stacked enemy, then 17 damage!
+  Chain Lightning - Does 18 damage to 3 units!
+
+IMPROVEMENT:
+Graphics on the bullet
+slow down the bullet
+
+IMPROVEMENT:
+reset button at the top of battle
+
+IMPROVEMENT:
+change the spawn upgrade rate from 5% reduction to +5% slower
+	make it cheaper to buy
+
+MAJOR IMPROVEMENT:
+add a new unit type
+
+IMPROVEMENT:
+Spell level gives talent points
+Each spell has 2 options - Damage and Utility
+Utility increases cost and damage too and 2 talent points
+lower spell level gain cost
+FireBall - damage upgrades by 9 per talent point
+	utility: dmg + 3, base mana cost + 2, dmg per unit + 1
+chain lightning - dmg upgrades by 9 per talent point
+	utility: cost 2, extra arc, base mana cost *= previous mana - current mana * .9
+	
+IMPROVEMENT:
+round fex stacks to ints when upgrading
+
+IMPROVEMENT:
+Numbering the unit spawners
+	
+ANALYSIS:
+The spawner might lag when it has high amounts. check the math
+
+NECESSARY:
+Goals, like unlocking units
+	
+	
+As of December, 2015 this part is outdated. I wrote it at
+the start and didn't change it
+
+TODO:
+Add tabs
+Resources on top, out of tab
+ * Pause
+
+War tab
+ * Battle
+ * Places - add explicit "extra units multiplier due to families"
+ * Health of castle's on each side
+ * Hover over a unit for popup info
+  > health, unit count, time alive, damage done, kills
+ * Hover out of box to clear popup
+ 
+Territory tab
+ * Places and progression
+ * Upgrades to reduce time / add multipliers
+ * Upgrades to improve base
+
+Unit Upgrades tab
+ * Costs gold for upgrades to spawn / health / damage / special
+ * Experience points per unit that died
+ * Sliders to use exp points on health to damage
+
+Buildings tab
+ * Costs gold & territory
+ * Global upgrades
+ * Defensive upgrades
+ * Expensive but strong ugprades
+ * Next unit type
+ * Mana buildings
+ 
+Mana tab
+ * Manual actions (spells / debuffs)
+ * Gold upgrades mana regen / max
+ * Mana upgrades spell effectiveness
+ * Has a max that fills up
+ 
+Map tab
+ * Choose next level
+ * One-time bonus that resets every hour + minute * level
+ * Auto-restart level for 1/5th territory, half gold
+ * levels are varied types, custom set, alternates more melee or more ranged
+ * Boss every 5 levels, extra bonuses that reset every 3 hours + 30 minute * boss #
+ 
+Options tab
+ * Show tutorial
+ * Clear save
+ * Statistics
+ 
+Graphics
+ * Different sprites for units
+ * Varied backgrounds
+ * Gates on each side
