@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+README.md
+CONTRIBUTING.md
+docs/
+.editorconfig
+.eslintrc.json
+Pull_of_War/
+Test/
+*.txt
+.env
+.DS_Store
