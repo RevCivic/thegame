@@ -14,7 +14,7 @@ function loadDefaults() {
 	costSpawnRate =        [20, 0, 90, 0];
 	unitCosts =            [8, 0, 30, 0];
 	upgradePointsInitial=  [0, 0,  0, 0];
-	unitPointValues=[[0, 0, 0, 0, 0],[],[0, 0, 0, 0, 0],[]]
+	unitPointValues=[[0, 0, 0, 0, 0, 0],[],[0, 0, 0, 0, 0, 0],[]]
 	//Intended defaults:
 	
 		//gold = 0;

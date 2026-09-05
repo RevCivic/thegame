@@ -218,10 +218,19 @@ function slider(id) {
         max: upgradePointsInitial[typeNum],
         step: 1,
         slide: function(event, ui) {
-			unitPointValues[typeNum][0] = upgradePointsInitial[typeNum] - ui.value;
-			unitPointValues[typeNum][3] = ui.value;
-			handleBuyAmounts(typeNum, 0)
-			handleBuyAmounts(typeNum, 3)
+			// Calculate points allocated to stats other than Damage (0) and Health (3)
+			let allocated_other = unitPointValues[typeNum][1] + unitPointValues[typeNum][2] + unitPointValues[typeNum][4] + unitPointValues[typeNum][5];
+			let remaining_for_damage_health = upgradePointsInitial[typeNum] - allocated_other;
+			
+			// Divide remaining points between Damage and Health based on slider
+			// Ensure both stay within available bounds
+			unitPointValues[typeNum][3] = Math.min(ui.value, remaining_for_damage_health);
+			unitPointValues[typeNum][0] = Math.max(0, remaining_for_damage_health - unitPointValues[typeNum][3]);
+			
+			// Update all stat values
+			for(let i = 0; i < 6; i++) {
+				handleBuyAmounts(typeNum, i)
+			}
 			updateStatusUpgrades("", type)
         }
     });
@@ -269,11 +278,11 @@ function convertTypeToNum(type, direction) {
 }
 
 function addButton(type, name, num) {
-	return "<div class='buyButton "+(num == 1 || num == 4 ? "' onclick='clickBuyButton("+num+" , \""+type+"\")'" : "nohover'")+"  id='buyButton"+num+"'>"+
+	return "<div class='buyButton' onclick='clickBuyButton("+num+" , \""+type+"\")'  id='buyButton"+num+"'>"+
 		"<div class='icon'>"+addIcon(num)+"</div>"+
 		"<div class='buyName'>"+name+"</div>"+
 		"<div class='buyVal' id='buy"+num+"'>3</div>"+
-		(num == 1 || num == 4 ? "<div class='upgradePoints' id='points"+num+"'>3</div>" : "") +
+		"<div class='upgradePoints' id='points"+num+"'>0</div>"+
 	"</div>"
 }
 

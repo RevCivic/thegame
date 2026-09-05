@@ -1,22 +1,47 @@
 function clickBuyButton(pos, type) {
-	//only pos == 1 and 4
+	//handle all upgrade positions 1-6
+	//Buttons allocate/deallocate points between stats
 	typeNum = convertTypeToNum(type, "right")
-	if(pos === 1 && unitPointValues[typeNum][3] > 0) {
-		unitPointValues[typeNum][0]++
-		unitPointValues[typeNum][3]--
+	let index = pos - 1;  // Convert button number (1-6) to index (0-5)
+	
+	if(pos === 4) {
+		// Health button: allow deallocation from Damage back to Health
+		// or allocation from Health to Damage (inverse of Damage button behavior)
+		if(unitPointValues[typeNum][0] > 0) {
+			// If Damage has allocation, move back to Health
+			unitPointValues[typeNum][0]--;
+			unitPointValues[typeNum][3]++;
+			handleBuyAmounts(typeNum, 0)
+			handleBuyAmounts(typeNum, 3)
+			updateStatusUpgrades("", type)
+			updateGoldVisual()
+		}
+	} else {
+		// Other buttons (1,2,3,5,6): toggle allocation to that stat
+		if(unitPointValues[typeNum][index] > 0) {
+			// Deallocate: move point from stat back to Health
+			unitPointValues[typeNum][index]--;
+			unitPointValues[typeNum][3]++;
+		} else if(unitPointValues[typeNum][3] > 0) {
+			// Allocate: move point from Health to stat
+			unitPointValues[typeNum][index]++;
+			unitPointValues[typeNum][3]--;
+		}
+		// Only update if we actually made a change
+		if(unitPointValues[typeNum][index] > 0 || unitPointValues[typeNum][3] > 0) {
+			handleBuyAmounts(typeNum, index)
+			handleBuyAmounts(typeNum, 3)
+			updateStatusUpgrades("", type)
+			updateGoldVisual()
+		}
 	}
-	if(pos === 4 && unitPointValues[typeNum][0] > 0) {
-		unitPointValues[typeNum][3]++
-		unitPointValues[typeNum][0]--
-	}
-	handleBuyAmounts(typeNum, 0)
-	handleBuyAmounts(typeNum, 3)
-	updateStatusUpgrades("", type)
-	updateGoldVisual()
 }
 
 function handleBuyAmounts(y, x) {
-	unitValues[y][x] = unitValuesInitial[y][x]*unitPointValues[y][x]*.4+unitValuesInitial[y][x]*Math.pow(1.15, unitPointValues[y][x]);
+	// Apply upgrade formula to all stat types (0-5)
+	if(x < 6) {
+		unitValues[y][x] = unitValuesInitial[y][x]*unitPointValues[y][x]*.4+unitValuesInitial[y][x]*Math.pow(1.15, unitPointValues[y][x]);
+	}
 }
 
 function clickBuildingBuyButton(num, type) {
