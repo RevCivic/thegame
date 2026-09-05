@@ -5,8 +5,10 @@ function clickBuyButton(pos, type) {
 	let index = pos - 1;  // Convert button number (1-6) to index (0-5)
 	
 	if(pos === 4) {
-		// Health button: move from Damage back to Health (inverse of Damage button)
+		// Health button: allow deallocation from Damage back to Health
+		// or allocation from Health to Damage (inverse of Damage button behavior)
 		if(unitPointValues[typeNum][0] > 0) {
+			// If Damage has allocation, move back to Health
 			unitPointValues[typeNum][0]--;
 			unitPointValues[typeNum][3]++;
 			handleBuyAmounts(typeNum, 0)
@@ -15,7 +17,7 @@ function clickBuyButton(pos, type) {
 			updateGoldVisual()
 		}
 	} else {
-		// Other buttons: toggle allocation (allocate if empty, deallocate if has points)
+		// Other buttons (1,2,3,5,6): toggle allocation to that stat
 		if(unitPointValues[typeNum][index] > 0) {
 			// Deallocate: move point from stat back to Health
 			unitPointValues[typeNum][index]--;
@@ -25,10 +27,13 @@ function clickBuyButton(pos, type) {
 			unitPointValues[typeNum][index]++;
 			unitPointValues[typeNum][3]--;
 		}
-		handleBuyAmounts(typeNum, index)
-		handleBuyAmounts(typeNum, 3)  // Health value changes when we reallocate
-		updateStatusUpgrades("", type)
-		updateGoldVisual()
+		// Only update if we actually made a change
+		if(unitPointValues[typeNum][index] > 0 || unitPointValues[typeNum][3] > 0) {
+			handleBuyAmounts(typeNum, index)
+			handleBuyAmounts(typeNum, 3)
+			updateStatusUpgrades("", type)
+			updateGoldVisual()
+		}
 	}
 }
 
