@@ -6,7 +6,7 @@ started = 0
 },50);*/
 
 //This makes the game work at full speed when not in focus.
-var doWork = new Worker('interval.js');
+var doWork = new Worker('js/interval.js');
 doWork.onmessage = function(event) {
     if ( event.data === 'interval.start' ) {
 		tick();
