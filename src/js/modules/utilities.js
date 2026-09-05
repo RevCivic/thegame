@@ -6,20 +6,20 @@
 /**
  * Rounds a number to 1 decimal place for display
  * @param {number} val - Value to round
- * @returns {string} Formatted value
+ * @returns {number} Rounded value
  */
 function round1(val) {
-	if (typeof val !== 'number') return '0';
+	if (typeof val !== 'number') return 0;
 	return Math.round(val * 10) / 10;
 }
 
 /**
  * Rounds a number to 2 decimal places for display
  * @param {number} val - Value to round
- * @returns {string} Formatted value
+ * @returns {number} Rounded value
  */
 function round2(val) {
-	if (typeof val !== 'number') return '0';
+	if (typeof val !== 'number') return 0;
 	return Math.round(val * 100) / 100;
 }
 

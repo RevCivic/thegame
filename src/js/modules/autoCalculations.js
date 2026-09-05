@@ -139,14 +139,17 @@ function calculateTerritoryUsed(spawnList) {
  * @returns {number} Cost of next placement
  */
 function calculateNextConstructionCost(unitType, spawnList) {
-	const costArray = unitType === "soldier" ? placeUnitTerritoryCost : placeUnitTerritoryCost;
-	const ratioArray = unitType === "soldier" ? placeUnitIncreaseRatio : placeUnitIncreaseRatio;
+	// Get the index for this unit type
+	const index = unitType === "soldier" ? 0 : 1;
 	
 	// Count how many of this type already exist in spawn list
 	const count = spawnList.filter(u => u === unitType).length;
 	
-	const index = unitType === "soldier" ? 0 : 1;
-	return calculateConstructionCost(costArray[index], ratioArray[index], count);
+	// Use the appropriate cost arrays for this unit type
+	const baseCost = placeUnitTerritoryCost[index];
+	const ratioMultiplier = placeUnitIncreaseRatio[index];
+	
+	return calculateConstructionCost(baseCost, ratioMultiplier, count);
 }
 
 /**

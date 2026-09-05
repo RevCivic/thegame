@@ -13,7 +13,21 @@ function clickBuyButton(pos, type) {
 	const typeNum = convertTypeToNum(type, "right");
 	const statIndex = pos - 1; // Convert button number (1-6) to index (0-5)
 	
-	// Get current point allocation
+	// Special case for Health button (pos === 4, statIndex === 3)
+	// Original behavior: check if Damage (index 0) is allocated and move back to Health
+	if (pos === 4) {
+		if (unitPointValues[typeNum][0] > 0) {
+			// Damage has allocation, move back to Health
+			deallocatePointFromStat(typeNum, 0, 3);
+			updateUnitUpgradeDisplay(typeNum, 0);
+			updateUnitUpgradeDisplay(typeNum, 3);
+			updateStatusUpgrades("", type);
+			updateGoldVisual();
+		}
+		return;
+	}
+	
+	// Standard behavior for other buttons (1,2,3,5,6)
 	const pointsAllocated = unitPointValues[typeNum][statIndex];
 	const healthPoints = unitPointValues[typeNum][3]; // Health is always index 3
 	
@@ -131,31 +145,14 @@ function buyUpgradePoint(type) {
 
 /**
  * REFACTORED: Hover and input handlers
- * Now delegated to inputHandlers module for better organization
- * These maintain backwards compatibility with onclick handlers in HTML
+ * Implementations are provided by inputHandlers module
+ * These functions maintain backwards compatibility with onclick handlers in HTML
+ * 
+ * NOTE: The implementations are in src/js/modules/inputHandlers.js
+ * and are called directly from HTML onclick handlers
  */
 
-/**
- * Entry point for hovering over a unit
- * (Maintains backwards compatibility)
- */
-function hoverAUnit(id) {
-	// Delegates to inputHandlers module
-	if (typeof window.hoverAUnit_impl !== 'undefined') {
-		window.hoverAUnit_impl(id);
-	}
-}
-
-/**
- * Entry point for removing hover from units
- * (Maintains backwards compatibility)
- */
-function removeHover() {
-	// Delegates to inputHandlers module
-	if (typeof window.removeHover_impl !== 'undefined') {
-		window.removeHover_impl();
-	}
-}
+// No stubs needed - inputHandlers.js provides the actual implementations
 
 var myKeyQueue = [];
 
