@@ -5,8 +5,9 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// Rate limiter middleware for static files
+// Security: Rate limiter middleware for all requests
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per windowMs
@@ -21,6 +22,15 @@ const limiter = rateLimit({
 
 // Apply rate limiter to all requests
 app.use(limiter);
+
+// Security: Add security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  next();
+});
 
 // Serve static files from the current directory
 app.use(express.static(path.join(__dirname)));
@@ -38,21 +48,25 @@ app.get('*', (req, res) => {
 // Start server
 const server = app.listen(PORT, () => {
   console.log(`Pull of War game server running on http://localhost:${PORT}`);
+  console.log(`Environment: ${NODE_ENV}`);
 });
 
 // Handle graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received. Gracefully shutting down...');
+const gracefulShutdown = () => {
+  console.log('SIGTERM/SIGINT received. Gracefully shutting down...');
   server.close(() => {
     console.log('Server closed');
     process.exit(0);
   });
+};
+
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err);
+  process.exit(1);
 });
 
-process.on('SIGINT', () => {
-  console.log('SIGINT received. Gracefully shutting down...');
-  server.close(() => {
-    console.log('Server closed');
-    process.exit(0);
-  });
-});
+module.exports = app;
