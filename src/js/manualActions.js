@@ -1,13 +1,20 @@
 function clickBuyButton(pos, type) {
 	//handle all upgrade positions 1-6
-	//Move points from Health allocation (index 3) to the target stat
+	//Move points between Health allocation (index 3) and target stat
 	typeNum = convertTypeToNum(type, "right")
 	let index = pos - 1;  // Convert button number (1-6) to index (0-5)
 	
-	// Can only allocate if we have points in Health to move from (index 3)
-	if(unitPointValues[typeNum][3] > 0 && index !== 3) {
-		unitPointValues[typeNum][index]++;
-		unitPointValues[typeNum][3]--;
+	// Toggle allocation: allocate if stat is empty, deallocate if stat has points
+	if(index !== 3) {  // Don't toggle Health with itself
+		if(unitPointValues[typeNum][index] > 0) {
+			// Deallocate: move point from stat back to Health
+			unitPointValues[typeNum][index]--;
+			unitPointValues[typeNum][3]++;
+		} else if(unitPointValues[typeNum][3] > 0) {
+			// Allocate: move point from Health to stat
+			unitPointValues[typeNum][index]++;
+			unitPointValues[typeNum][3]--;
+		}
 		handleBuyAmounts(typeNum, index)
 		handleBuyAmounts(typeNum, 3)  // Health value changes when we reallocate
 		updateStatusUpgrades("", type)
