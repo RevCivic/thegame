@@ -41,7 +41,7 @@ app.get('/health', (req, res) => {
 });
 
 // Serve index.html for any request not matching a file
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 

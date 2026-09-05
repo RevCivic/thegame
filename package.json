@@ -18,7 +18,7 @@
   "author": "Stop_Sign AKA Phurple",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.21.1",
+    "express": "^5.2.1",
     "express-rate-limit": "^7.4.0"
   },
   "devDependencies": {
