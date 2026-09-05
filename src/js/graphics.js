@@ -223,9 +223,9 @@ function slider(id) {
 			let remaining_for_damage_health = upgradePointsInitial[typeNum] - allocated_other;
 			
 			// Divide remaining points between Damage and Health based on slider
-			// Ensure Damage allocation doesn't go negative
-			unitPointValues[typeNum][0] = Math.max(0, remaining_for_damage_health - ui.value);
-			unitPointValues[typeNum][3] = ui.value;
+			// Ensure both stay within available bounds
+			unitPointValues[typeNum][3] = Math.min(ui.value, remaining_for_damage_health);
+			unitPointValues[typeNum][0] = Math.max(0, remaining_for_damage_health - unitPointValues[typeNum][3]);
 			
 			// Update all stat values
 			for(let i = 0; i < 6; i++) {
