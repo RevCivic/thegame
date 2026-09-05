@@ -19,7 +19,21 @@ function handleUnitUpgradeButton(pos, type) {
 	const typeNum = convertTypeToNum(type, "right");
 	const statIndex = pos - 1; // Convert button number (1-6) to index (0-5)
 	
-	// Handle point allocation or deallocation
+	// Special case for Health button (pos === 4, statIndex === 3)
+	// Original behavior: check if Damage (index 0) is allocated and move back to Health
+	if (pos === 4) {
+		if (unitPointValues[typeNum][0] > 0) {
+			// Damage has allocation, move back to Health
+			deallocatePointFromStat(typeNum, 0, 3);
+			updateUnitUpgradeDisplay(typeNum, 0);
+			updateUnitUpgradeDisplay(typeNum, 3);
+			updateStatusUpgrades("", type);
+			updateGoldVisual();
+		}
+		return;
+	}
+	
+	// Handle point allocation or deallocation for other buttons
 	const pointsAllocated = unitPointValues[typeNum][statIndex];
 	const healthPoints = unitPointValues[typeNum][3]; // Health is always index 3
 	

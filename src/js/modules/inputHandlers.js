@@ -292,45 +292,24 @@ function clickAUnit(id) {
 
 /**
  * Handles spell click
+ * Spell casting logic is implemented in spells.js
+ * This stub maintains the function signature for backwards compatibility
  * @param {number} spellIndex - Index of spell to cast
  */
-function clickedSpell(spellIndex) {
-	if (typeof spellIndex !== 'number' || spellIndex < 0) {
-		console.error(`Invalid spell index: ${spellIndex}`);
-		return;
-	}
-
-	// Spell casting logic would go here
-	// This is delegated to spells.js for now
-	console.log(`Casting spell ${spellIndex}`);
-}
+// Note: The actual implementation is in spells.js
 
 /**
  * Changes unit upgrade screen view
+ * Unit screen logic is implemented in graphics.js
+ * This stub maintains the function signature for backwards compatibility
  * @param {string} unitType - Type of unit
  */
-function changeUnitScreen(unitType) {
-	if (!isValidUnitType(unitType)) {
-		console.error(`Invalid unit type: ${unitType}`);
-		return;
-	}
-
-	// Unit screen logic would go here
-	// This is delegated to graphics.js for now
-	console.log(`Showing upgrades for ${unitType}`);
-}
+// Note: The actual implementation is in graphics.js
 
 /**
  * Changes building upgrade screen view
+ * Building screen logic is implemented in graphics.js
+ * This stub maintains the function signature for backwards compatibility
  * @param {string} buildingType - Type of building
  */
-function changeBuildingScreen(buildingType) {
-	if (!isValidBuildingType(buildingType)) {
-		console.error(`Invalid building type: ${buildingType}`);
-		return;
-	}
-
-	// Building screen logic would go here
-	// This is delegated to graphics.js for now
-	console.log(`Showing upgrades for ${buildingType}`);
-}
+// Note: The actual implementation is in graphics.js

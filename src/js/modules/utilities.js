@@ -127,7 +127,7 @@ function roundtoFormat1(rate) {
 }
 
 /**
- * Rounds a generic value (unused duplicate)
+ * Rounds a generic value to 2 decimal places for display
  * @param {number} val - Value to round
  * @returns {string} Formatted value
  */

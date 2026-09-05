@@ -95,8 +95,10 @@ function calculateConstruction(spawnList, constructionTotal) {
 			if (spawnList[q] === "soldier") constructionState.spawnAmounts[0]++;
 			if (spawnList[q] === "spear") constructionState.spawnAmounts[1]++;
 			tempTotal -= constructionCost;
-		} else if (tempTotal > 0) {
-			tempTotal -= constructionCost;
+		} else {
+			// Item is not affordable - don't subtract more than available
+			// This prevents tempTotal from going negative and affecting subsequent items
+			tempTotal = 0;
 		}
 	}
 
