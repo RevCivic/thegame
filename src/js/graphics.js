@@ -218,18 +218,18 @@ function slider(id) {
         max: upgradePointsInitial[typeNum],
         step: 1,
         slide: function(event, ui) {
-			// Calculate remaining points after other allocations
-			let allocated = unitPointValues[typeNum][1] + unitPointValues[typeNum][2] + unitPointValues[typeNum][4] + unitPointValues[typeNum][5];
-			let remaining = upgradePointsInitial[typeNum] - allocated;
-			unitPointValues[typeNum][0] = remaining - ui.value;
+			// Calculate points allocated to stats other than Damage (0) and Health (3)
+			let allocated_other = unitPointValues[typeNum][1] + unitPointValues[typeNum][2] + unitPointValues[typeNum][4] + unitPointValues[typeNum][5];
+			let remaining_for_damage_health = upgradePointsInitial[typeNum] - allocated_other;
+			
+			// Divide remaining points between Damage and Health based on slider
+			unitPointValues[typeNum][0] = remaining_for_damage_health - ui.value;
 			unitPointValues[typeNum][3] = ui.value;
-			// Update all affected stat indices
-			handleBuyAmounts(typeNum, 0)
-			handleBuyAmounts(typeNum, 1)
-			handleBuyAmounts(typeNum, 2)
-			handleBuyAmounts(typeNum, 3)
-			handleBuyAmounts(typeNum, 4)
-			handleBuyAmounts(typeNum, 5)
+			
+			// Update all stat values
+			for(let i = 0; i < 6; i++) {
+				handleBuyAmounts(typeNum, i)
+			}
 			updateStatusUpgrades("", type)
         }
     });

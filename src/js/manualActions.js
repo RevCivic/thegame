@@ -1,15 +1,15 @@
 function clickBuyButton(pos, type) {
 	//handle all upgrade positions 1-6
+	//Move points from Health allocation (index 3) to the target stat
 	typeNum = convertTypeToNum(type, "right")
-	// Calculate available unspent points
-	let allocated = unitPointValues[typeNum][0] + unitPointValues[typeNum][1] + unitPointValues[typeNum][2] + unitPointValues[typeNum][3] + unitPointValues[typeNum][4] + unitPointValues[typeNum][5];
-	let unspent = upgradePointsInitial[typeNum] - allocated;
+	let index = pos - 1;  // Convert button number (1-6) to index (0-5)
 	
-	// Only increment if we have unspent points available
-	if(unspent > 0 && pos >= 1 && pos <= 6) {
-		let index = pos - 1;  // Convert button number (1-6) to index (0-5)
+	// Can only allocate if we have points in Health to move from (index 3)
+	if(unitPointValues[typeNum][3] > 0 && index !== 3) {
 		unitPointValues[typeNum][index]++;
+		unitPointValues[typeNum][3]--;
 		handleBuyAmounts(typeNum, index)
+		handleBuyAmounts(typeNum, 3)  // Health value changes when we reallocate
 		updateStatusUpgrades("", type)
 		updateGoldVisual()
 	}
