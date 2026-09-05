@@ -129,44 +129,32 @@ function buyUpgradePoint(type) {
 	updateGoldVisual();
 }
 
-function removeHover() {
-	prevDiv = document.getElementById("unit"+curClickedUnit);
-	if(prevDiv) {
-		prevDiv.style.border = "0px solid black";
-		prevDiv.style.marginTop = "0px";
-		prevDiv.style.marginLeft = "0px";
-		prevDiv.style.padding = "0px";
+/**
+ * REFACTORED: Hover and input handlers
+ * Now delegated to inputHandlers module for better organization
+ * These maintain backwards compatibility with onclick handlers in HTML
+ */
+
+/**
+ * Entry point for hovering over a unit
+ * (Maintains backwards compatibility)
+ */
+function hoverAUnit(id) {
+	// Delegates to inputHandlers module
+	if (typeof window.hoverAUnit_impl !== 'undefined') {
+		window.hoverAUnit_impl(id);
 	}
-	document.getElementById("victoryConditionBox").style.display="inline-block";
-	document.getElementById("unitDisplayBox").style.display="none";
-	
-	curClickedUnit = "-1";
 }
 
-function hoverAUnit(id) {
-	prevDiv = document.getElementById("unit"+curClickedUnit);
-	if(prevDiv) {
-		prevDiv.style.border = "0px solid black";
-		prevDiv.style.marginTop = "0px";
-		prevDiv.style.marginLeft = "0px";
-		prevDiv.style.padding = "0px";
+/**
+ * Entry point for removing hover from units
+ * (Maintains backwards compatibility)
+ */
+function removeHover() {
+	// Delegates to inputHandlers module
+	if (typeof window.removeHover_impl !== 'undefined') {
+		window.removeHover_impl();
 	}
-	curClickedUnit = id;
-	if(id=="-1") {
-		document.getElementById("victoryConditionBox").style.display="inline-block";
-		document.getElementById("unitDisplayBox").style.display="none";
-		return;
-	}
-	div = document.getElementById("unit"+id);
-	div.style.border = "1px solid black";
-	div.style.marginTop = "-1px";
-	div.style.marginLeft = "-3px";
-	div.style.padding = "0px 2px";
-	
-	updateHover(id)
-	
-	document.getElementById("victoryConditionBox").style.display="none";
-	document.getElementById("unitDisplayBox").style.display="inline-block";
 }
 
 var myKeyQueue = [];
