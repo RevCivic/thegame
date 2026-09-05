@@ -1,22 +1,25 @@
 function clickBuyButton(pos, type) {
-	//only pos == 1 and 4
+	//handle all upgrade positions 1-6
 	typeNum = convertTypeToNum(type, "right")
-	if(pos === 1 && unitPointValues[typeNum][3] > 0) {
-		unitPointValues[typeNum][0]++
-		unitPointValues[typeNum][3]--
+	// Calculate available unspent points
+	let allocated = unitPointValues[typeNum][0] + unitPointValues[typeNum][1] + unitPointValues[typeNum][2] + unitPointValues[typeNum][3] + unitPointValues[typeNum][4] + unitPointValues[typeNum][5];
+	let unspent = upgradePointsInitial[typeNum] - allocated;
+	
+	// Only increment if we have unspent points available
+	if(unspent > 0 && pos >= 1 && pos <= 6) {
+		let index = pos - 1;  // Convert button number (1-6) to index (0-5)
+		unitPointValues[typeNum][index]++;
+		handleBuyAmounts(typeNum, index)
+		updateStatusUpgrades("", type)
+		updateGoldVisual()
 	}
-	if(pos === 4 && unitPointValues[typeNum][0] > 0) {
-		unitPointValues[typeNum][3]++
-		unitPointValues[typeNum][0]--
-	}
-	handleBuyAmounts(typeNum, 0)
-	handleBuyAmounts(typeNum, 3)
-	updateStatusUpgrades("", type)
-	updateGoldVisual()
 }
 
 function handleBuyAmounts(y, x) {
-	unitValues[y][x] = unitValuesInitial[y][x]*unitPointValues[y][x]*.4+unitValuesInitial[y][x]*Math.pow(1.15, unitPointValues[y][x]);
+	// Apply upgrade formula to all stat types (0-5)
+	if(x < 6) {
+		unitValues[y][x] = unitValuesInitial[y][x]*unitPointValues[y][x]*.4+unitValuesInitial[y][x]*Math.pow(1.15, unitPointValues[y][x]);
+	}
 }
 
 function clickBuildingBuyButton(num, type) {
