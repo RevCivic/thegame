@@ -6,7 +6,9 @@
 
 /**
  * Processes all spawn rate calculations and timers
- * Pure calculation function - returns new state without modifying globals
+ * Note: This function accesses global game configuration (maps, stage) which are
+ * immutable and part of the application configuration, not game state. This is
+ * an acceptable violation of pure function principles for performance.
  * @param {object} state - Current game state
  * @returns {object} Updated state
  */
@@ -35,6 +37,7 @@ function calculateSpawnRates(state) {
 	}
 
 	// Enemy units
+	// Note: maps[stage][4] is immutable game configuration (enemy spawn timer base)
 	updates.enemySpawnRate = updateSpawnRate(state.enemySpawnRate, rateReduction);
 	if (updates.enemySpawnRate <= 0) {
 		updates.enemySpawnRateReset = true;

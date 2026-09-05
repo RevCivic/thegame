@@ -5,7 +5,7 @@
 
 /**
  * Validates that a value has sufficient resources (gold)
- * @param {number} cost - The cost to check
+ * @param {number} cost - The cost to check (can be 0 for free items)
  * @param {number} currentGold - Current gold amount
  * @returns {boolean} True if sufficient gold exists
  */
@@ -13,7 +13,7 @@ function canAfford(cost, currentGold) {
 	return typeof cost === 'number' && 
 	       typeof currentGold === 'number' && 
 	       currentGold >= cost && 
-	       cost > 0;
+	       cost >= 0;
 }
 
 /**
