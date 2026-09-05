@@ -18,11 +18,11 @@
   "author": "Stop_Sign AKA Phurple",
   "license": "MIT",
   "dependencies": {
-    "express": "^5.2.1",
-    "express-rate-limit": "^7.4.0"
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.1"
   },
   "devDependencies": {
-    "eslint": "^9.16.0"
+    "eslint": "^9.39.5"
   },
   "engines": {
     "node": ">=18.0.0"
