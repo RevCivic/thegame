@@ -1,40 +1,53 @@
+/**
+ * REFACTORED: Unit upgrade button handler
+ * Allocates/deallocates upgrade points between different stats
+ * Now delegates to modular button handler with improved logic
+ */
 function clickBuyButton(pos, type) {
-	//handle all upgrade positions 1-6
-	//Buttons allocate/deallocate points between stats
-	typeNum = convertTypeToNum(type, "right")
-	let index = pos - 1;  // Convert button number (1-6) to index (0-5)
-	
-	if(pos === 4) {
-		// Health button: allow deallocation from Damage back to Health
-		// or allocation from Health to Damage (inverse of Damage button behavior)
-		if(unitPointValues[typeNum][0] > 0) {
-			// If Damage has allocation, move back to Health
-			unitPointValues[typeNum][0]--;
-			unitPointValues[typeNum][3]++;
-			handleBuyAmounts(typeNum, 0)
-			handleBuyAmounts(typeNum, 3)
-			updateStatusUpgrades("", type)
-			updateGoldVisual()
-		}
-	} else {
-		// Other buttons (1,2,3,5,6): toggle allocation to that stat
-		if(unitPointValues[typeNum][index] > 0) {
-			// Deallocate: move point from stat back to Health
-			unitPointValues[typeNum][index]--;
-			unitPointValues[typeNum][3]++;
-		} else if(unitPointValues[typeNum][3] > 0) {
-			// Allocate: move point from Health to stat
-			unitPointValues[typeNum][index]++;
-			unitPointValues[typeNum][3]--;
-		}
-		// Only update if we actually made a change
-		if(unitPointValues[typeNum][index] > 0 || unitPointValues[typeNum][3] > 0) {
-			handleBuyAmounts(typeNum, index)
-			handleBuyAmounts(typeNum, 3)
-			updateStatusUpgrades("", type)
-			updateGoldVisual()
-		}
+	// Validate inputs first
+	if (!isValidButtonPosition(pos) || !isValidUnitType(type)) {
+		console.error(`Invalid button click: pos=${pos}, type=${type}`);
+		return;
 	}
+
+	const typeNum = convertTypeToNum(type, "right");
+	const statIndex = pos - 1; // Convert button number (1-6) to index (0-5)
+	
+	// Special case for Health button (pos === 4, statIndex === 3)
+	// Original behavior: check if Damage (index 0) is allocated and move back to Health
+	if (pos === 4) {
+		if (unitPointValues[typeNum][0] > 0) {
+			// Damage has allocation, move back to Health
+			deallocatePointFromStat(typeNum, 0, 3);
+			updateUnitUpgradeDisplay(typeNum, 0);
+			updateUnitUpgradeDisplay(typeNum, 3);
+			updateStatusUpgrades("", type);
+			updateGoldVisual();
+		}
+		return;
+	}
+	
+	// Standard behavior for other buttons (1,2,3,5,6)
+	const pointsAllocated = unitPointValues[typeNum][statIndex];
+	const healthPoints = unitPointValues[typeNum][3]; // Health is always index 3
+	
+	// Determine action: allocate or deallocate
+	if (pointsAllocated > 0) {
+		// Deallocate: move point from stat back to Health
+		deallocatePointFromStat(typeNum, statIndex, 3);
+	} else if (healthPoints > 0) {
+		// Allocate: move point from Health to stat
+		allocatePointToStat(typeNum, statIndex, 3);
+	} else {
+		// No points available to allocate/deallocate
+		return;
+	}
+	
+	// Update all displays
+	updateUnitUpgradeDisplay(typeNum, statIndex);
+	updateUnitUpgradeDisplay(typeNum, 3); // Also update health display
+	updateStatusUpgrades("", type);
+	updateGoldVisual();
 }
 
 function handleBuyAmounts(y, x) {
@@ -44,102 +57,102 @@ function handleBuyAmounts(y, x) {
 	}
 }
 
+/**
+ * REFACTORED: Building upgrade button handler
+ * Now with improved logic, better separation of concerns, and input validation
+ */
 function clickBuildingBuyButton(num, type) {
-	if(type == "wall") {
-		if(num == 0 && gold >= buildingUpgradesCost[0][0]) { 
-			gold -= buildingUpgradesCost[0][0]
-			buildingUpgradesCost[0][0] = Math.floor(1.12 * buildingUpgradesCost[0][0])
-			wallHealth+=1250
-			wallHealthInitial+=1250
-		}
-		document.getElementById("buyBuilding0").innerHTML = round1(wallHealthInitial);
-		document.getElementById("costBuilding0").innerHTML = round1(buildingUpgradesCost[0][0])
-	}
-	if(type == "fence") {
-		if(num == 0 && gold >= buildingUpgradesCost[1][0]) { 
-			gold -= buildingUpgradesCost[1][0]
-			buildingUpgradesCost[1][0] = Math.floor(1.15 * buildingUpgradesCost[1][0])
-			fenceHealth+=50
-			fenceHealthInitial+=50
-		}
-		document.getElementById("buyBuilding0").innerHTML = round1(fenceHealthInitial);
-		document.getElementById("costBuilding0").innerHTML = round1(buildingUpgradesCost[1][0])
-	}
-	
-	updateWallHealthVisuals()
-	updateGoldVisual()
-}
-
-function clickBuySpawnRate(type) {
-	typeNum = convertTypeToNum(type, "right") 
-	if(costSpawnRate[typeNum] <= gold) {
-		gold -= costSpawnRate[typeNum]
-		costSpawnRate[typeNum] *= 4
-		initialSpawnRate[typeNum/2] *= .95;
-		spawnRate[typeNum/2] *= .95;
-		if(initialSpawnRate[typeNum/2] <= 1) {
-			//TODO:handle this (disable the button?)
-		}
-	}
-	updateStatusUpgrades("", type)
-	updateGoldVisual()
-}
-
-function buyUpgradePoint(type) {
-	typeNum = convertTypeToNum(type, "right")
-	if(unitCosts[typeNum] <= gold) {
-		gold -= unitCosts[typeNum]
-		updateGoldVisual()
-		unitCosts[typeNum] = 1.6 * unitCosts[typeNum];
-		upgradePointsInitial[typeNum]++
-		unitPointValues[typeNum][3]++;
-		handleBuyAmounts(typeNum, 3)
-		updateStatusUpgrades("", type)
-		$("#slider").slider('option', 'max', upgradePointsInitial[typeNum]);
-		$("#slider").slider('value', unitPointValues[typeNum][3]);
-	}
-	updateGoldVisual()
-}
-
-function removeHover() {
-	prevDiv = document.getElementById("unit"+curClickedUnit);
-	if(prevDiv) {
-		prevDiv.style.border = "0px solid black";
-		prevDiv.style.marginTop = "0px";
-		prevDiv.style.marginLeft = "0px";
-		prevDiv.style.padding = "0px";
-	}
-	document.getElementById("victoryConditionBox").style.display="inline-block";
-	document.getElementById("unitDisplayBox").style.display="none";
-	
-	curClickedUnit = "-1";
-}
-
-function hoverAUnit(id) {
-	prevDiv = document.getElementById("unit"+curClickedUnit);
-	if(prevDiv) {
-		prevDiv.style.border = "0px solid black";
-		prevDiv.style.marginTop = "0px";
-		prevDiv.style.marginLeft = "0px";
-		prevDiv.style.padding = "0px";
-	}
-	curClickedUnit = id;
-	if(id=="-1") {
-		document.getElementById("victoryConditionBox").style.display="inline-block";
-		document.getElementById("unitDisplayBox").style.display="none";
+	// Input validation
+	if (!isValidBuildingButtonNum(num) || !isValidBuildingType(type)) {
+		console.error(`Invalid building upgrade: num=${num}, type=${type}`);
 		return;
 	}
-	div = document.getElementById("unit"+id);
-	div.style.border = "1px solid black";
-	div.style.marginTop = "-1px";
-	div.style.marginLeft = "-3px";
-	div.style.padding = "0px 2px";
+
+	const buildingIndex = getBuildingTypeIndex(type);
+	if (buildingIndex === -1) {
+		console.error(`Unknown building type: ${type}`);
+		return;
+	}
+
+	// Get current cost and check affordability
+	const cost = buildingUpgradesCost[buildingIndex][num];
+	if (!canAfford(cost, gold)) {
+		return; // Not enough gold
+	}
+
+	// Apply purchase
+	applyBuildingUpgrade(type, buildingIndex, num, cost);
 	
-	updateHover(id)
-	
-	document.getElementById("victoryConditionBox").style.display="none";
-	document.getElementById("unitDisplayBox").style.display="inline-block";
+	// Update visuals
+	updateBuildingUpgradeDisplay(type, buildingIndex, num);
+	updateWallHealthVisuals();
+	updateGoldVisual();
 }
+
+/**
+ * REFACTORED: Spawn rate upgrade button handler
+ * Now with improved input validation and error handling
+ */
+function clickBuySpawnRate(type) {
+	// Input validation
+	if (!isValidUnitType(type)) {
+		console.error(`Invalid unit type: ${type}`);
+		return;
+	}
+
+	const typeNum = convertTypeToNum(type, "right");
+	const cost = costSpawnRate[typeNum];
+	
+	// Check if player can afford upgrade
+	if (!canAfford(cost, gold)) {
+		return; // Not enough gold
+	}
+
+	// Apply upgrade
+	applySpawnRateUpgrade(typeNum);
+	
+	// Update display
+	updateStatusUpgrades("", type);
+	updateGoldVisual();
+}
+
+/**
+ * REFACTORED: Upgrade point purchase handler
+ * Now with improved input validation and error handling
+ */
+function buyUpgradePoint(type) {
+	// Input validation
+	if (!isValidUnitType(type)) {
+		console.error(`Invalid unit type: ${type}`);
+		return;
+	}
+
+	const typeNum = convertTypeToNum(type, "right");
+	const cost = unitCosts[typeNum];
+	
+	// Check if player can afford upgrade
+	if (!canAfford(cost, gold)) {
+		return; // Not enough gold
+	}
+
+	// Apply purchase
+	applyUpgradePointPurchase(typeNum);
+	
+	// Update display
+	updateStatusUpgrades("", type);
+	updateGoldVisual();
+}
+
+/**
+ * REFACTORED: Hover and input handlers
+ * Implementations are provided by inputHandlers module
+ * These functions maintain backwards compatibility with onclick handlers in HTML
+ * 
+ * NOTE: The implementations are in src/js/modules/inputHandlers.js
+ * and are called directly from HTML onclick handlers
+ */
+
+// No stubs needed - inputHandlers.js provides the actual implementations
 
 var myKeyQueue = [];
 
