@@ -154,34 +154,8 @@ function buyUpgradePoint(type) {
 
 // No stubs needed - inputHandlers.js provides the actual implementations
 
-var myKeyQueue = [];
-
-//This happens in order to make hotkeys
-$(document).keydown(function(e) {
-    code = (e.charCode != 0 ? e.charCode : e.keyCode)
-    myKeyQueue.push(code);
-	processKeyQueue();
-});
-
-/*$(document).keyup(function(e) {
-    processKeyQueue();
-});*/
-
-function processKeyQueue() {
-	key = myKeyQueue[0]
-	myKeyQueue.splice(0, 1);
-	if(key == 32) {
-		pause()
-	}
-	if(key == 49) { //1
-		clickedSpell(0)
-	}
-	if(key == 50) { //2
-		clickedSpell(1)
-	}
-	if(myKeyQueue.length > 0)
-		processKeyQueue()
-}
+// Keyboard handlers and processKeyQueue have been moved to modules/inputHandlers.js
+// The myKeyQueue variable is declared there and initializeKeyboardHandlers() should be called during initialization
 
 
 //these are variables that aren't saved, being reset per level

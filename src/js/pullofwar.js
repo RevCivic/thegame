@@ -526,47 +526,9 @@ function upgradeConstructionRate() {
 	updateTerritoryVisual()
 }
 
-function addToPlaceList(type) {
-	if(type == "soldier") cost = placeUnitTerritoryCost[0] + placeUnitIncreaseRatio[0] * findNumTypeInList("soldier")
-	if(type == "spear") cost = placeUnitTerritoryCost[1] + placeUnitIncreaseRatio[1] * findNumTypeInList("spear")
-	usedPlaceTerritory = calculateUsedPlaceTerritory()
-	if(territory - usedPlaceTerritory - cost >= 0) {
-		if(spawnList.length == 0) {
-			stop = 0
-		}
-		spawnList.push(type)
-		calculateUsedPlaceTerritory()
-	}
-	showSpawnList()
-	updatePlaceVisuals()
-}
-
-function removeFromPlaceList(elem) {
-	spawnIndex = $(".spawnDiv").index(elem.parentNode)
-	spawnList.splice(spawnIndex, 1)
-	showSpawnList()
-	calculateUsedPlaceTerritory()
-	updatePlaceVisuals()
-}
-
-function shiftPlaceListUp(elem) {
-	spawnIndex = $(".spawnDiv").index(elem.parentNode)
-	if(spawnIndex != 0) {
-		temp = spawnList[spawnIndex]
-		spawnList[spawnIndex]=spawnList[spawnIndex-1]
-		spawnList[spawnIndex-1] = temp
-	}
-	showSpawnList()
-}
-function shiftPlaceListDown(elem) {
-	spawnIndex = $(".spawnDiv").index(elem.parentNode)
-	if(spawnIndex < spawnList.length-1) {
-		temp = spawnList[spawnIndex]
-		spawnList[spawnIndex]=spawnList[spawnIndex+1]
-		spawnList[spawnIndex+1] = temp
-	}
-	showSpawnList()
-}
+// NOTE: addToPlaceList, removeFromPlaceList, shiftPlaceListUp, and shiftPlaceListDown
+// have been moved to modules/inputHandlers.js with improved validation and error handling
+// This allows the refactored code to be properly utilized
 
 function calculateUsedPlaceTerritory() {
 	totalUsedTerritory = findPrice("soldier", 0)
