@@ -131,14 +131,16 @@ function addToPlaceList(unitType) {
 	}
 
 	// Check if we have enough territory
+	// calculateUsedPlaceTerritory() also updates the DOM display
 	const usedPlaceTerritory = calculateUsedPlaceTerritory();
+	
 	if (territory - usedPlaceTerritory - cost >= 0) {
 		// If this is the first unit in the list, unpause the game
 		if (spawnList.length === 0) {
 			stop = 0;
 		}
 		spawnList.push(unitType);
-		// Recalculate and update the territory UI display
+		// Update the territory display again with the new total after adding unit
 		calculateUsedPlaceTerritory();
 	}
 
