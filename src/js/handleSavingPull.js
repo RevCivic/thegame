@@ -205,6 +205,9 @@ function loadFromStorage() {
 	showSpawnList()
 	updateMapTimers()
 	updateConstructionWorkers()
+	
+	// Initialize keyboard handlers for spell hotkeys
+	initializeKeyboardHandlers()
 
 	document.getElementById("mainColumn").style.display="inline-block";
 }

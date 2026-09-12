@@ -102,8 +102,8 @@ function showSpawnList() {
 			"<div class='constructionBar' id='constructionGrey"+q+"'></div>"+
 			"<img height='23' width='29' src='assets/pics/"+spawnList[q]+".png' class='spawnListPic'>"+
 			"<div style='position:absolute;left:70px;color:black;font-size:20px;'>"+spawnDivCost+"</div>"+
-			((q>0&&spawnList[q-1]!=spawnList[q])?"<img height='21' width='21' onclick='shiftPlaceListUp(this)' src='assets/pics/arrow.png' class='listPic'>":"")+
-			((q<spawnList.length-1&&spawnList[q+1]!=spawnList[q])?"<img height='21' width='21' onclick='shiftPlaceListDown(this)' src='assets/pics/Darrow.png' class='listPic' style='left:186px'>":"")+
+				(q>0?"<img height='21' width='21' onclick='shiftPlaceListUp(this)' src='assets/pics/arrow.png' class='listPic'>":" ")+
+				(q<spawnList.length-1?"<img height='21' width='21' onclick='shiftPlaceListDown(this)' src='assets/pics/Darrow.png' class='listPic' style='left:186px'>":" ")+
 			"<img height='21' width='21' onclick='removeFromPlaceList(this)' src='assets/pics/x.png' class='listPic' style='left:230px'>"+
 		"</div>"
 	}
@@ -428,6 +428,7 @@ function switchMainTab(switchTo) {
 		case 2: //places
 			document.getElementById("placesSpace").style.display = "inline-block";
 			document.getElementById("territoryTab").style.backgroundColor="rgb(142, 212, 142)";
+			updatePlaceVisuals(); // Recalculate place costs when tab is opened
 		break;
 		case 3: //units
 			document.getElementById("unitsSpace").style.display = "inline-block";

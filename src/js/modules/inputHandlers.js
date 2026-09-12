@@ -3,6 +3,9 @@
  * Centralizes all user input and interaction event handlers
  */
 
+// Keyboard queue for processing multiple keystrokes
+var myKeyQueue = [];
+
 /**
  * Handles unit hover/selection
  * Shows detailed stats for unit when hovered
@@ -114,7 +117,25 @@ function addToPlaceList(unitType) {
 		spawnList = [];
 	}
 
-	spawnList.push(unitType);
+	// Calculate the cost for this new placement
+	let cost = 0;
+	if (unitType === "soldier") {
+		cost = placeUnitTerritoryCost[0] + placeUnitIncreaseRatio[0] * findNumTypeInList("soldier");
+	} else if (unitType === "spear") {
+		cost = placeUnitTerritoryCost[1] + placeUnitIncreaseRatio[1] * findNumTypeInList("spear");
+	}
+
+	// Check if we have enough territory
+	const usedPlaceTerritory = calculateUsedPlaceTerritory();
+	if (territory - usedPlaceTerritory - cost >= 0) {
+		// If this is the first unit in the list, unpause the game
+		if (spawnList.length === 0) {
+			stop = 0;
+		}
+		spawnList.push(unitType);
+		calculateUsedPlaceTerritory();
+	}
+
 	showSpawnList();
 	updatePlaceVisuals();
 	updateConstructionVisual();
