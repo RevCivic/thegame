@@ -133,6 +133,7 @@ function addToPlaceList(unitType) {
 			stop = 0;
 		}
 		spawnList.push(unitType);
+		// Recalculate and update the territory UI display
 		calculateUsedPlaceTerritory();
 	}
 
