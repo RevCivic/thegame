@@ -140,8 +140,8 @@ function addToPlaceList(unitType) {
 			stop = 0;
 		}
 		spawnList.push(unitType);
-		// Update the territory display again with the new total after adding unit
-		calculateUsedPlaceTerritory();
+		// Update the territory display with the new total after adding unit
+		const newTotal = calculateUsedPlaceTerritory();
 	}
 
 	showSpawnList();
