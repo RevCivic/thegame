@@ -118,11 +118,16 @@ function addToPlaceList(unitType) {
 	}
 
 	// Calculate the cost for this new placement
+	// Note: isValidUnitType() check above ensures unitType is 'soldier' or 'spear'
 	let cost = 0;
 	if (unitType === "soldier") {
 		cost = placeUnitTerritoryCost[0] + placeUnitIncreaseRatio[0] * findNumTypeInList("soldier");
 	} else if (unitType === "spear") {
 		cost = placeUnitTerritoryCost[1] + placeUnitIncreaseRatio[1] * findNumTypeInList("spear");
+	} else {
+		// This should never happen due to validation above, but be explicit
+		console.error("Unexpected unit type in cost calculation:", unitType);
+		return;
 	}
 
 	// Check if we have enough territory
